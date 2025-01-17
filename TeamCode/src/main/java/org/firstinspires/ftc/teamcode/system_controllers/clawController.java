@@ -29,10 +29,10 @@ public class clawController {
 
     public static clawStatus CS = INITIALIZE, PS = INITIALIZE;
 
-    public static double closed = 0.52;
+    public static double closed = 0.48;
     public static double opened = 0.76 ;
     public static double collect_specimen = 0.73;
-    public static double not_so_closed = 0.59;
+    public static double not_so_closed = 0.50;
 
     public void update(robotMap r)
     {

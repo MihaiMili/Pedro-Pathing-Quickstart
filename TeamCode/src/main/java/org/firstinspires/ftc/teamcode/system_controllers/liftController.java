@@ -60,7 +60,7 @@ public class liftController {
     public static double hang_lv1 = 14000;
     public static double hang_lv2 = 26000;
     public static double hang_lil_down = 21500;
-    public static double specimen_score = 22500;
+    public static double specimen_score = 25000;
     public int CurrentPosition = 0;
     // public static double transfer = -100;
 

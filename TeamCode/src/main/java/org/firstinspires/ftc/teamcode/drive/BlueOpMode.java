@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.system_controllers.fourbarController;
 import org.firstinspires.ftc.teamcode.system_controllers.liftController;
 import org.firstinspires.ftc.teamcode.system_controllers.outtakeController;
 import org.firstinspires.ftc.teamcode.system_controllers.ptoController;
+import org.firstinspires.ftc.teamcode.system_controllers.intakeController;
 //import org.firstinspires.ftc.teamcode.system_controllers.ruletaController;
 import org.firstinspires.ftc.teamcode.system_controllers.transferController;
 
@@ -39,6 +40,7 @@ public class BlueOpMode extends LinearOpMode
     public String recognition = "edoarepulamicasieumare";
     public boolean can_init = false;
     public boolean can_hang = false;
+    public String opMode = "red";
     double ajustabil =0;
 
     public void robotCentricDrive(DcMotor leftFront, DcMotor leftBack, DcMotor rightFront, DcMotor rightBack, double  SpeedLimit, boolean StrafesOn , double LeftTrigger, double RightTrigger, boolean pto_ON)
@@ -150,6 +152,7 @@ public class BlueOpMode extends LinearOpMode
         outtakeController outtake = new outtakeController();
         ptoController pto = new ptoController();
         transferController transfer = new transferController();
+        intakeController intake = new intakeController();
         //ruletaController ruleta = new ruletaController();
         //climbController climb = new climbController();
 
@@ -217,7 +220,6 @@ public class BlueOpMode extends LinearOpMode
         int green_value;
         int blue_value;
         String color_value = "nothing";
-
 
         Gamepad currentGamepad1 = new Gamepad();
         Gamepad currentGamepad2 = new Gamepad();
@@ -295,6 +297,11 @@ public class BlueOpMode extends LinearOpMode
                 PrecisionDenominatorAngle = 0.4;
             }
             else PrecisionDenominatorAngle = 1;
+            if (!previousGamepad1.touchpad && currentGamepad1.touchpad)
+            {
+                if (opMode == "red") opMode = "blue";
+                else opMode = "red";
+            }
             /**
              * COLLECT
              */
@@ -371,7 +378,7 @@ public class BlueOpMode extends LinearOpMode
                     {
                         has_sample = true;
                     }
-                    if(Objects.equals(recognition, "red"))
+                    if((opMode == "red" && recognition == "blue") || (opMode == "blue" && recognition == "red"))
                     {
                         gamepad1.runRumbleEffect(effectCollect);
                         gamepad2.runRumbleEffect(effectCollect);
@@ -513,18 +520,25 @@ public class BlueOpMode extends LinearOpMode
                 if(!previousGamepad1.right_bumper && currentGamepad1.right_bumper && org.firstinspires.ftc.teamcode.Globals.globals.is_intransfer == false)
                 {
 
-                    if(extendo.CS != extendoController.extendoStatus.EXTENDED)
+//                    if(extendo.CS != extendoController.extendoStatus.EXTENDED)
+//                    {
+//                        extendo.CS = extendoController.extendoStatus.EXTENDED;
+//                        ajustabil = 0;
+//                    }
+//                    else
+//                    {
+//                        extendo.CS = extendoController.extendoStatus.RETRACTED;
+//                        ajustabil = 0;
+//                      //  org.firstinspires.ftc.teamcode.Globals.globals.ajustabil = 0;
+//                        collectAngle.CS = collectAngleController.collectAngleStatus.DRIVE;
+//                    }
+                    if (intake.CS != intakeController.intakeStatus.EXTENDO_DONE_LONG || intake.CS == intakeController.intakeStatus.INITIALIZE)
                     {
-                        extendo.CS = extendoController.extendoStatus.EXTENDED;
-                        ajustabil = 0;
+                        intake.CS = intakeController.intakeStatus.LONG;
                     }
                     else
                     {
-                        extendo.CS = extendoController.extendoStatus.RETRACTED;
-                        ajustabil = 0;
-                        //  org.firstinspires.ftc.teamcode.Globals.globals.ajustabil = 0;
-                        collectAngle.CS = collectAngleController.collectAngleStatus.DRIVE;
-
+                        intake.CS = intakeController.intakeStatus.RETRACT_COLLECT;
                     }
                 }
 
@@ -561,16 +575,24 @@ public class BlueOpMode extends LinearOpMode
 
                 if(!previousGamepad1.left_bumper && currentGamepad1.left_bumper && org.firstinspires.ftc.teamcode.Globals.globals.is_intransfer == false)
                 {
-                    if(extendo.CS != extendoController.extendoStatus.SHORT)
+//                    if(extendo.CS != extendoController.extendoStatus.SHORT)
+//                    {
+//                        extendo.CS = extendoController.extendoStatus.SHORT;
+//                        ajustabil = 0;
+//                    }
+//                    else
+//                    {
+//                        extendo.CS = extendoController.extendoStatus.RETRACTED;
+//                        collectAngle.CS = collectAngleController.collectAngleStatus.DRIVE;
+//                        ajustabil = 0;
+//                    }
+                    if (intake.CS != intakeController.intakeStatus.EXTENDO_DONE_SHORT)
                     {
-                        extendo.CS = extendoController.extendoStatus.SHORT;
-                        ajustabil = 0;
+                        intake.CS = intakeController.intakeStatus.SHORT;
                     }
                     else
                     {
-                        extendo.CS = extendoController.extendoStatus.RETRACTED;
-                        collectAngle.CS = collectAngleController.collectAngleStatus.DRIVE;
-                        ajustabil = 0;
+                        intake.CS = intakeController.intakeStatus.RETRACT_COLLECT;
                     }
                 }
             }
@@ -605,6 +627,7 @@ public class BlueOpMode extends LinearOpMode
                 if(pto_ON == false) {lift.update(r, position_lift, voltage);
                     outtake.update(r, claw, lift, fourbar, clawAngle, transfer);}
                 transfer.update(r, claw, collectAngle, outtake, extendo);
+                intake.update(r, extendo);
                 pto.update(r);
                 //ruleta.update(r);
                 //climb.update(r,outtake,pto,ruleta);
@@ -635,14 +658,13 @@ public class BlueOpMode extends LinearOpMode
 //            telemetry.addData("ajustabil", org.firstinspires.ftc.teamcode.Globals.globals.ajustabil);
 //            try
 //            {telemetry.addData("target value",extendo.activePID.targetValue);} catch (Exception e) {}
-
-
             //telemetry.addData("color dist", r.color_sensor.getDistance(DistanceUnit.MM));
 //            telemetry.addData("red", r.color_sensor.red());
 //            telemetry.addData("green", r.color_sensor.green());
 //            telemetry.addData("blue", r.color_sensor.blue());
             telemetry.addData("color_value",color_value);
-
+            telemetry.addData("current OpMode", opMode);
+            telemetry.addData("intake",intake.CS);
             loopTime = loop;
             telemetry.update();
 

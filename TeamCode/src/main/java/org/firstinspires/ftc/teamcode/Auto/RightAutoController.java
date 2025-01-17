@@ -23,6 +23,8 @@ import org.firstinspires.ftc.teamcode.system_controllers.fourbarController;
 import org.firstinspires.ftc.teamcode.system_controllers.liftController;
 import org.firstinspires.ftc.teamcode.system_controllers.outtakeController;
 
+import java.io.BufferedReader;
+
 
 public class RightAutoController {
     public enum autoControllerStatus
@@ -77,10 +79,24 @@ public class RightAutoController {
         SAMPLE_DONE,
         TRANSFER_DONE,
 
+        FOURBAR_SPECIMEN_UP,
+        FOUTBAR_SPECIMEN_UP_DONE,
+        FOURBAR_SPECIMEN_DOWN,
+        FOURBAR_SPECIMEN_CLOSE_CLAW,
+        FOURBAR_SPCIMEN_DONW_DONE,
+
+        OPEN_CLAW_STATUS,
+        CLOSE_CLAW_STATUS,
+
+        DONE_CLAW_STATUS,
+
     }
     public static autoControllerStatus CurrentStatus = autoControllerStatus.NOTHING, PreviousStatus = autoControllerStatus.NOTHING;
 
     public static autoControllerStatus CurrentStatus2 = autoControllerStatus.NOTHING, PreviousStatus2 = autoControllerStatus.NOTHING;
+
+    public static autoControllerStatus CurrentStatusClaw = autoControllerStatus.NOTHING, PreviousStatusClaw = autoControllerStatus.NOTHING;
+
 
     ElapsedTime preloadTimer = new ElapsedTime();
     ElapsedTime extendoTimer = new ElapsedTime();
@@ -125,6 +141,7 @@ public class RightAutoController {
             }
             case SPECIMEN_SCORE:
             {
+                org.firstinspires.ftc.teamcode.system_controllers.liftController.CS = org.firstinspires.ftc.teamcode.system_controllers.liftController.liftStatus.SPECIMEN_SCORE;
                 fourbarController.CS = org.firstinspires.ftc.teamcode.system_controllers.fourbarController.fourbarStatus.SCORE_SPECIMEN;
                 clawAngleController.CS = org.firstinspires.ftc.teamcode.system_controllers.clawAngleController.clawAngleStatus.SPECIMEN_SCORE;
                 clawTimer.reset();
@@ -180,6 +197,7 @@ public class RightAutoController {
             //TODO nush dc nu merge ca e ca la inceput
             case SPECIMEN_SCORE_CYCLE:
             {
+                org.firstinspires.ftc.teamcode.system_controllers.liftController.CS = org.firstinspires.ftc.teamcode.system_controllers.liftController.liftStatus.SPECIMEN_SCORE;
                 fourbarController.CS = org.firstinspires.ftc.teamcode.system_controllers.fourbarController.fourbarStatus.SCORE_SPECIMEN;
                 clawAngleController.CS = org.firstinspires.ftc.teamcode.system_controllers.clawAngleController.clawAngleStatus.SPECIMEN_SCORE;
                 //clawController.CS = org.firstinspires.ftc.teamcode.system_controllers.clawController.clawStatus.OPENED;
@@ -301,6 +319,31 @@ public class RightAutoController {
                 CurrentStatus = autoControllerStatus.SAMPLE_DONE;
                 break;
             }
+
+            case FOURBAR_SPECIMEN_UP:
+            {
+                fourbarController.CS = org.firstinspires.ftc.teamcode.system_controllers.fourbarController.fourbarStatus.UP_SPECIMEN;
+                CurrentStatus = autoControllerStatus.FOUTBAR_SPECIMEN_UP_DONE;
+                break;
+            }
+
+            case FOURBAR_SPECIMEN_DOWN:
+            {
+                fourbarController.CS = org.firstinspires.ftc.teamcode.system_controllers.fourbarController.fourbarStatus.COLLECT_SPECIMEN;
+                claw_timer.reset();
+                CurrentStatus = autoControllerStatus.FOURBAR_SPECIMEN_CLOSE_CLAW;
+                break;
+            }
+
+            case FOURBAR_SPECIMEN_CLOSE_CLAW:
+            {
+                if(claw_timer.seconds() > 0.15)
+                {
+                    clawController.CS = org.firstinspires.ftc.teamcode.system_controllers.clawController.clawStatus.CLOSED;
+                    CurrentStatus = autoControllerStatus.FOURBAR_SPCIMEN_DONW_DONE;
+                }
+                break;
+            }
         }
 
         //todo switch between cs2 and cs1
@@ -321,7 +364,7 @@ public class RightAutoController {
             {
                 extendoController.CS = org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED_SPECIMEN;
                 //collectAngleController.CS = org.firstinspires.ftc.teamcode.system_controllers.collectAngleController.collectAngleStatus.COLLECT;
-               // r.collect.setPower(-1);
+                //r.collect.setPower(-1);
                 CurrentStatus2 = autoControllerStatus.EXTEND_DONE;
                 break;
             }
@@ -344,6 +387,7 @@ public class RightAutoController {
             {
                 extendoController.CS = org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED;
                 liftController.CS = org.firstinspires.ftc.teamcode.system_controllers.liftController.liftStatus.DOWN;
+                fourbarController.CS = org.firstinspires.ftc.teamcode.system_controllers.fourbarController.fourbarStatus.INTER;
                 CurrentStatus2 = autoControllerStatus.EXTEND_DONE;
                 break;
             }
@@ -358,6 +402,25 @@ public class RightAutoController {
             }
 
         }
+
+        switch (CurrentStatusClaw)
+        {
+            case OPEN_CLAW:
+            {
+                clawController.CS = org.firstinspires.ftc.teamcode.system_controllers.clawController.clawStatus.OPENED;
+                CurrentStatusClaw = autoControllerStatus.DONE_CLAW_STATUS;
+                break;
+            }
+
+            case CLOSE_CLAW_STATUS:
+            {
+                clawController.CS = org.firstinspires.ftc.teamcode.system_controllers.clawController.clawStatus.CLOSED;
+                CurrentStatusClaw = autoControllerStatus.DONE_CLAW_STATUS;
+                break;
+            }
+        }
+
+        PreviousStatusClaw = CurrentStatusClaw;
         PreviousStatus = CurrentStatus;
         PreviousStatus2 = CurrentStatus2;
     }

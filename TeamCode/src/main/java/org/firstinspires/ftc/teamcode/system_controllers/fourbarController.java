@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.system_controllers.fourbarControlle
 import static org.firstinspires.ftc.teamcode.system_controllers.fourbarController.fourbarStatus.SCORE_SPECIMEN;
 import static org.firstinspires.ftc.teamcode.system_controllers.fourbarController.fourbarStatus.SPECIMEN;
 import static org.firstinspires.ftc.teamcode.system_controllers.fourbarController.fourbarStatus.TRANSFER;
+import static org.firstinspires.ftc.teamcode.system_controllers.fourbarController.fourbarStatus.UP_SPECIMEN;
 
 import com.acmerobotics.dashboard.config.Config;
 
@@ -29,7 +30,8 @@ public class fourbarController {
         INTER,
         COLLECT_SPECIMEN_INTER,
         HANG_LV1,
-        HANG_LV2
+        HANG_LV2,
+        UP_SPECIMEN,
     }
 
     public fourbarController() {
@@ -41,8 +43,9 @@ public class fourbarController {
 
     public static double score_specimen = 0.72;//0.9;
     public static double collect = 0.1;
-    public static double sample = 0.42
-             ;
+    public static double sample = 0.42;
+    public static double specimen_up = 0.7;
+
     public static double specimen = 0.87;
     public static double drive = 1;
     public static double transfer = 0.8;
@@ -53,7 +56,7 @@ public class fourbarController {
 
     public void update(robotMap r)
     {
-        if (PS != CS || CS == INITIALIZE || CS == DRIVE || CS == COLLECT_SPECIMEN  || CS == SCORE_SPECIMEN  || CS == TRANSFER  || CS == SPECIMEN || CS == SAMPLE || CS == COLLECT_SPECIMEN_INTER || CS == HANG_LV1 || CS == HANG_LV2)
+        if (PS != CS || CS == INITIALIZE || CS == DRIVE || CS == COLLECT_SPECIMEN  || CS == SCORE_SPECIMEN  || CS == TRANSFER  || CS == SPECIMEN || CS == SAMPLE || CS == COLLECT_SPECIMEN_INTER || CS == HANG_LV1 || CS == HANG_LV2 || CS == UP_SPECIMEN)
 
         {
 
@@ -63,6 +66,13 @@ public class fourbarController {
                     //r.fourbarRight.setPosition(transfer);
                     r.fourbarLeft.setPosition(drive);
                     r.fourbarRight.setPosition(drive);
+                    break;
+                }
+
+                case UP_SPECIMEN:
+                {
+                    r.fourbarLeft.setPosition(specimen_up);
+                    r.fourbarRight.setPosition(specimen_up);
                     break;
                 }
 

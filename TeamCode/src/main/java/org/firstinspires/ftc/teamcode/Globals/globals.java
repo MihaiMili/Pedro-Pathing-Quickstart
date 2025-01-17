@@ -10,4 +10,6 @@ public class globals {
     public static int extendo_auto_i = 0;
 
     public static int ajustabil = 0;
+
+    public static boolean hf_transfer;
 }

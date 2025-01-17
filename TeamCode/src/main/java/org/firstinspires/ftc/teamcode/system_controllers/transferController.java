@@ -92,14 +92,25 @@ public static double extendo_limit = 0.2;
                     {
                         claw_timer.reset();
                             r.collect.setPower(0);
-                        CS = TRANSFER_CLAW_CLOSE;
+                            if(org.firstinspires.ftc.teamcode.Globals.globals.hf_transfer == true)
+                            {
+                                globals.is_intransfer = false;
+                                globals.hf_transfer = false;
+                                CS = TRANSFER_DONE;
+                            }
+                            else
+                            {
+                                CS = TRANSFER_CLAW_CLOSE;
+                            }
                     }
                     break;
                 }
+
                 case TRANSFER_CLAW_CLOSE:
                 {
                     if (claw_timer.seconds() > 0.5)
                     {
+                        org.firstinspires.ftc.teamcode.Globals.globals.is_intransfer = true;
                         claw.CS = clawController.clawStatus.NOT_SO_CLOSED;
                         outtake_timer.reset();
                         CS = TRANSFER_OUTTAKE;

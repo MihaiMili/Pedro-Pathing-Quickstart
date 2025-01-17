@@ -75,9 +75,9 @@ public class LeftAutoBlue extends LinearOpMode {
     public Telemetry telemetryA;
 
     public static double preloadAngle = Math.toRadians(335);
-    public static double yellow1Angle = Math.toRadians(340);
+    public static double yellow1Angle = Math.toRadians(343);
     public static double yellow2Angle = Math.toRadians(0);
-    public static double yellow3Angle = Math.toRadians(25);
+    public static double yellow3Angle = Math.toRadians(28);
     public static double scoreAngle = Math.toRadians(338);
     public static double score1Angle = Math.toRadians(0);
     public static double score2Angle = Math.toRadians(0);
@@ -140,20 +140,20 @@ public class LeftAutoBlue extends LinearOpMode {
 
         Pose preloadPose = new Pose(22.5,136,preloadAngle);
         Pose preloadScorePose = new Pose(15.5, 138, preloadAngle);
-        Pose yellowPose1 = new Pose(24.5,133,yellow1Angle);
-        Pose yellowPose2 = new Pose(23,136,yellow2Angle);
-        Pose yellowPose3 = new Pose(24.5,136,yellow3Angle);
+        Pose yellowPose1 = new Pose(24.5,133.5,yellow1Angle);
+        Pose yellowPose2 = new Pose(22,136,yellow2Angle);
+        Pose yellowPose3 = new Pose(24.5,138,yellow3Angle);
         Pose scorePose1 = new Pose(17.5,141,score1Angle);
         Pose scorePose2 = new Pose(16.5,142,score2Angle);
-        Pose scorePose3 = new Pose(16,141,score3Angle);
+        Pose scorePose3 = new Pose(17,141,score3Angle);
         Pose summersibleAlignPose1 = new Pose(60,120,collectSummersibleAngle);
         Pose summersibleCollectPose1 = new Pose(75+poscnt,100,collectSummersibleAngle);
-        Pose summersibleScorePose1 = new Pose(19,140,0);
-        Pose summersibleGoScorePose1 = new Pose(18,140,0);
+        Pose summersibleScorePose1 = new Pose(21,141,0);
+        Pose summersibleGoScorePose1 = new Pose(20,141,0);
         Pose summersibleAlignPose2 = new Pose(60,120,collectSummersibleAngle);
         Pose summersibleCollectPose2 = new Pose(75+poscnt,100,collectSummersibleAngle);
-        Pose summersibleScorePose2 = new Pose(19,150,0);
-        Pose summersibleGoScorePose2 = new Pose(18,150,0);
+        Pose summersibleScorePose2 = new Pose(21,141,0);
+        Pose summersibleGoScorePose2 = new Pose(20,141,0);
         Pose parkPose = new Pose(60,105,parkAngle);
         Pose parkScorePose = new Pose(55, 96, parkAngle);
 
@@ -555,7 +555,7 @@ public class LeftAutoBlue extends LinearOpMode {
                 }
                 case COLLECT_SUMMERSIBLE:
                 {
-                    if (!drive.isBusy())
+                    if (!drive.isBusy() || fuuny_teren.seconds() > 1.5)
                     {
                         leftAutoController.CurrentStatus = LeftAutoController.autoControllerStatus.COLLECT_SUMMERSIBLE_EXTEND_SHORT;
                         timer_failsafe.reset();

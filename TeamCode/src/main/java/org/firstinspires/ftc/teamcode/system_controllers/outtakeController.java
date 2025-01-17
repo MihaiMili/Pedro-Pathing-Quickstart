@@ -181,7 +181,7 @@ public class outtakeController {
                 case SAMPLE_HIGH_FOURBAR:
                 {
                     //if (r.lift.getCurrentPosition() > 43000)
-                    if (fourbar_timer.seconds() > 0.4)
+                    if (fourbar_timer.seconds() > 0.6)
                     {
                         fourbar.CS = fourbarController.fourbarStatus.SAMPLE;
                         clawAngle.CS = clawAngleController.clawAngleStatus.SAMPlE_SCORE;

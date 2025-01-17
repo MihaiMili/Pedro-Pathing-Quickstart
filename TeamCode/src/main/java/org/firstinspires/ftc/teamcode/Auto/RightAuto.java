@@ -71,6 +71,8 @@ public class RightAuto extends LinearOpMode {
 
         FUNNY_HP_3,
 
+        wait_specimen,
+
 
     }
 
@@ -80,7 +82,7 @@ public class RightAuto extends LinearOpMode {
     public static double scoreAngle = Math.toRadians(0);
     public static double color1CollectAngle = Math.toRadians(323);
     public static double color2CollectAngle = Math.toRadians(315);
-    public static double color3CollectAngle = Math.toRadians(315);
+    public static double color3CollectAngle = Math.toRadians(312);
     public static double color1SpitAngle = Math.toRadians(225);
     public static double color2SpitAngle = Math.toRadians(225);
     public static double color3SpitAngle = Math.toRadians(225);
@@ -148,8 +150,8 @@ public class RightAuto extends LinearOpMode {
 //
         // de imbunatait collect pose
         Pose preloadScorePose = new Pose(40.5,70,scoreAngle);
-        Pose color1CollectPose = new Pose (29.5,32.5,color1CollectAngle);
-        Pose color2CollectPose = new Pose (29.5,26,color2CollectAngle);
+        Pose color1CollectPose = new Pose (29.5,33,color1CollectAngle);
+        Pose color2CollectPose = new Pose (29.5,26.5,color2CollectAngle);
         Pose color3CollectPose = new Pose(28.5,18.5  ,color3CollectAngle);
         Pose color1SpitPose = new Pose(31,37,color1SpitAngle);
         Pose color2SpitPose = new Pose(32,26,color2SpitAngle);
@@ -356,6 +358,8 @@ public class RightAuto extends LinearOpMode {
         ElapsedTime funny_hp_3 = new ElapsedTime();
         ElapsedTime funny_teren = new ElapsedTime();
         ElapsedTime timer_park = new ElapsedTime();
+
+        ElapsedTime wait_specimen = new ElapsedTime();
         int nrcicluri = 0,nrcicluriscorare = 0;
 
         /**
@@ -471,7 +475,7 @@ public class RightAuto extends LinearOpMode {
                     }
 
                     if (!drive.isBusy() && extendo_timer.seconds() > limit_collect[nrcicluri]) {
-                        r.collect.setPower(-1);
+                       r.collect.setPower(-1);
                         RightAutoController.CurrentStatus2 = RightAutoController.autoControllerStatus.FULL_EXTEND;
                         timer_failsafe.reset();
                         timer_loop.reset();
@@ -597,7 +601,7 @@ public class RightAuto extends LinearOpMode {
                             //if (extendo_timer.seconds() > 1) r.collect.setPower(0);
                             drive.followPath(specimenGrab1,true);
                             RightAutoController.CurrentStatus2 = RightAutoController.autoControllerStatus.RETRACT;
-                            fourbarController.CS = fourbarController.fourbarStatus.COLLECT_SPECIMEN;
+                            //fourbarController.CS = fourbarController.fourbarStatus.COLLECT_SPECIMEN;
                             status = STROBOT.COLLECT_SPECIMEN;
                             break;
                         }
@@ -605,7 +609,7 @@ public class RightAuto extends LinearOpMode {
                         case 1:
                         {
                             drive.followPath(specimenGrab2, true);
-                            fourbarController.CS = fourbarController.fourbarStatus.COLLECT_SPECIMEN;
+                            //fourbarController.CS = fourbarController.fourbarStatus.COLLECT_SPECIMEN;
                             status = STROBOT.COLLECT_SPECIMEN;
                             break;
                         }
@@ -613,7 +617,7 @@ public class RightAuto extends LinearOpMode {
                         case 2:
                         {
                             drive.followPath(specimenGrab3, true);
-                            fourbarController.CS = fourbarController.fourbarStatus.COLLECT_SPECIMEN;
+                            //fourbarController.CS = fourbarController.fourbarStatus.COLLECT_SPECIMEN;
                             status = STROBOT.COLLECT_SPECIMEN;
                             break;
                         }
@@ -621,7 +625,7 @@ public class RightAuto extends LinearOpMode {
                         case 3:
                         {
                             drive.followPath(specimenGrab4,true);
-                            fourbarController.CS = fourbarController.fourbarStatus.COLLECT_SPECIMEN;
+                            //fourbarController.CS = fourbarController.fourbarStatus.COLLECT_SPECIMEN;
                             status = STROBOT.COLLECT_SPECIMEN;
                             break;
                         }
@@ -655,7 +659,9 @@ public class RightAuto extends LinearOpMode {
                     //if (nrcicluriscorare > 0) rightAutoController.CurrentStatus = RightAutoController.autoControllerStatus.OUTTAKE_DOWN;
                     if (!drive.isBusy())
                     {
-                        clawController.CS = clawController.clawStatus.CLOSED;
+
+                        //clawController.CS = clawController.clawStatus.CLOSED;
+                        RightAutoController.CurrentStatusClaw = RightAutoController.autoControllerStatus.CLOSE_CLAW_STATUS;
                         timer_claw.reset();
                         status = STROBOT.GO_SCORE_SPECIMEN;
                     }
@@ -664,7 +670,8 @@ public class RightAuto extends LinearOpMode {
 
                 case FUUNY_HP_1:
                 {
-                    clawController.CS = clawController.clawStatus.OPENED;
+                    //clawController.CS = clawController.clawStatus.OPENED;
+                    RightAutoController.CurrentStatusClaw = RightAutoController.autoControllerStatus.OPEN_CLAW_STATUS;
                     Path FUNNY1 = new Path(new BezierLine(new Point(drive.getPose().getX(), drive.getPose().getY(), Point.CARTESIAN), new Point(drive.getPose().getX() +5, drive.getPose().getY(), Point.CARTESIAN)));
                     FUNNY1.setConstantHeadingInterpolation(Math.toRadians(0));
                     drive.followPath(FUNNY1);
@@ -769,6 +776,7 @@ public class RightAuto extends LinearOpMode {
                     if (score_timer.seconds() > 1.3 || rightAutoController.CurrentStatus == RightAutoController.autoControllerStatus.SPECIMEN_SCORE_DONE)
                     {
                         //clawController.CS = clawController.clawStatus.OPENED;
+                        RightAutoController.CurrentStatusClaw = RightAutoController.autoControllerStatus.OPEN_CLAW_STATUS;
                         rightAutoController.CurrentStatus = RightAutoController.autoControllerStatus.OUTTAKE_DOWN;
                         status = STROBOT.GO_COLLECT_SPECIMEN;
                     }

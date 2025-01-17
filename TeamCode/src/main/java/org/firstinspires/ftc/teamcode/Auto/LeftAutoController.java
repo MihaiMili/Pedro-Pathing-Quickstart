@@ -230,7 +230,7 @@ public class LeftAutoController {
             case COLLECT_SUMMERSIBLE_EXTEND_SHORT:
             {
                 collectAngleController.CS = org.firstinspires.ftc.teamcode.system_controllers.collectAngleController.collectAngleStatus.COLLECT;
-                extendoController.CS = org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.SHORT;
+                extendoController.CS = org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED_AUTO_SUMMERSIBLE;
                 r.collect.setPower(-1);
                 extendoTimer.reset();
                 CurrentStatus = autoControllerStatus.COLLECT_SUMMERSIBLE_EXTEND_LONG;
@@ -240,7 +240,7 @@ public class LeftAutoController {
             {
                 if (extendoTimer.seconds() > 0.2)
                 {
-                    extendoController.CS = org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED;
+                    extendoController.CS = org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED_AUTO_SUMMERSIBLE_LONG ;
                     CurrentStatus = autoControllerStatus.COLLECT_SUMMERSIBLE_DONE;
                 }
                 break;

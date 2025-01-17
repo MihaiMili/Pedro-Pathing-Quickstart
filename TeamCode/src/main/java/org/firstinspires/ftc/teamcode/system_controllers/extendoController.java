@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.system_controllers.extendoControlle
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED_AJUSTABIl2;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED_AUTO;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED_AUTO_SUMMERSIBLE;
+import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED_AUTO_SUMMERSIBLE_LONG;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED_SPECIMEN;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.INITIALIZE;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.RETRACTED;
@@ -31,6 +32,7 @@ public class extendoController {
         EXTENDED_AJUSTABIl2,
         EXTENDED_AUTO,
         EXTENDED_AUTO_SUMMERSIBLE,
+        EXTENDED_AUTO_SUMMERSIBLE_LONG,
         SHORT,
         SHORT_AJUSTABIL1,
         SHORT_AJUSTABIL2,
@@ -67,13 +69,15 @@ public class extendoController {
     public static double drive = 800;
     public static double transfer = -5;
     public static double short_pose = 200;
-    public static double summersible_short = 150;
+    public static double summersible_short = 50;
+    public static double summersible_long = 420;
     public static double specimen1 = 200;
     public static double specimen2 = 200;
     public static double specimen3 = 200;
     public static double extended_auto[]= {440, 440, 440};
 
-    public static double extend_specimen[] = {370, 370,370,350};
+
+    public static double extend_specimen[] = {350, 370,350,350};
     public static double short_extend_specimen = 75;
 
     public static int extendo_i = 0;
@@ -129,6 +133,11 @@ public class extendoController {
             case EXTENDED_AUTO_SUMMERSIBLE:
                 activePID = extendoPIDExtend;
                 break;
+            case EXTENDED_AUTO_SUMMERSIBLE_LONG:
+            {
+                activePID = extendoPIDExtend;
+                break;
+            }
             case EXTENDED_SPECIMEN:
                 activePID = extendoPIDExtend;
                 break;
@@ -155,6 +164,11 @@ public class extendoController {
             activePID.targetValue = retracted;
         }
 
+        if(CS == EXTENDED)
+        {
+            activePID.targetValue = extended + globals.ajustabil;
+        }
+
 //        if(CS == EXTENDED)
 //        {
 //            activePID.targetValue = Math.min(Math.max(extended + org.firstinspires.ftc.teamcode.Globals.globals.ajustabil,100),460);
@@ -165,7 +179,7 @@ public class extendoController {
 //            activePID.targetValue = Math.min(Math.max(short_pose + org.firstinspires.ftc.teamcode.Globals.globals.ajustabil,100),460);
 //        }
 
-        if (CS != PS || CS == EXTENDED || CS == RETRACTED || CS == SHORT || CS == TRANSFER || CS == EXTENDED_SPECIMEN || CS == EXTENDED_AUTO || CS == SPECIMEN1 || CS == extendoStatus.SPECIMEN2 || CS == extendoStatus.SPECIMEN3 || CS == EXTENDED_AUTO_SUMMERSIBLE || CS == EXTENDED_AJUSTABIl1 || CS == EXTENDED_AJUSTABIl2 || CS == SHORT_AJUSTABIL1 || CS == SHORT_AJUSTABIL2) {
+        if (CS != PS || CS == EXTENDED || CS == RETRACTED || CS == SHORT || CS == TRANSFER || CS == EXTENDED_SPECIMEN || CS == EXTENDED_AUTO || CS == SPECIMEN1 || CS == extendoStatus.SPECIMEN2 || CS == extendoStatus.SPECIMEN3 || CS == EXTENDED_AUTO_SUMMERSIBLE || CS == EXTENDED_AJUSTABIl1 || CS == EXTENDED_AJUSTABIl2 || CS == SHORT_AJUSTABIL1 || CS == SHORT_AJUSTABIL2 || CS == EXTENDED_AUTO_SUMMERSIBLE_LONG) {
             switch (CS) {
                 case INITIALIZE: {
                     activePID.targetValue = retracted;
@@ -174,7 +188,7 @@ public class extendoController {
                 }
 
                 case EXTENDED: {
-                    activePID.targetValue = Math.min(Math.max(extended + org.firstinspires.ftc.teamcode.Globals.globals.ajustabil,100),460);
+                    activePID.targetValue = extended + globals.ajustabil;
                     activePID.maxOutput = 1;
                     break;
                 }
@@ -199,13 +213,19 @@ public class extendoController {
 
                 case EXTENDED_AUTO_SUMMERSIBLE:{
                     activePID.targetValue = summersible_short;
-                    activePID.maxOutput = 0.7;
+                    activePID.maxOutput = 0.5;
+                    break;
+                }
+                case EXTENDED_AUTO_SUMMERSIBLE_LONG:
+                {
+                    activePID.targetValue = summersible_long;
+                    activePID.maxOutput = 0.5;
                     break;
                 }
                 case SHORT_EXTEND_SPECIMEN:
                 {
                     activePID.targetValue = short_extend_specimen;
-                    activePID.maxOutput = 1;
+                    activePID.maxOutput = 0.7;
                     break;
                 }
 
@@ -262,7 +282,7 @@ public class extendoController {
 
                 case EXTENDED_SPECIMEN: {
                     activePID.targetValue = extend_specimen[org.firstinspires.ftc.teamcode.Globals.globals.extendo_auto_i];
-                    activePID.maxOutput = 1;
+                    activePID.maxOutput = 0.7;
                     break;
                 }
 
